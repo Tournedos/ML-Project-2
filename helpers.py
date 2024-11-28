@@ -4,6 +4,14 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
 
+def find_repo_root():
+    percorso_corrente = os.path.dirname(os.path.abspath(__file__))
+    while percorso_corrente != os.path.dirname(percorso_corrente):  # As long as we dont reach the right root
+        if os.path.exists(os.path.join(percorso_corrente, '.git')):
+            return percorso_corrente
+        percorso_corrente = os.path.dirname(percorso_corrente)
+    raise Exception("Radice della repository non trovata")
+
 
 def load_data(file_path, worm_id):
     """
