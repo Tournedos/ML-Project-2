@@ -53,7 +53,7 @@ from models import mean_squared_error_gd
 
 # >> 2nd part to load all the data from the lifespan folder and try 1st model on it
 # Define the path to the Lifespan folder
-data_path = "/Users/louistschanz/Documents/EPFL-Cours/MA1/ML/Project-2/ML-Project-2/Data/Lifespan"
+data_path = os.path.join(os.getcwd(), "Data", "Lifespan")
 
 # Step 1 : Load the data
 print("Loading worm data...")
@@ -84,5 +84,3 @@ print(f"Shape of initial_w: {initial_w.shape}")
 w, loss = mean_squared_error_gd(y_train, X_train, initial_w, max_iters, gamma)
 
 # Step 4: Print the results
-print(f"Final Weights: {w}")
-print(f"Final MSE Loss: {loss}")
