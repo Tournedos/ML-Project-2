@@ -17,26 +17,15 @@
 >>> WHAT I ANALYSED (might be wrong)
 Key Takeaways from our Data 
 
-1.  Frame Information:
-    Each frame corresponds to 2 seconds of elapsed time.
-    Therefore, 10'800 frames × 2 seconds = 21600 seconds 
-    Time per frame = Session duration / Number of frames per session = 21'600 / 10'800 = 2 sec
+Each frame corresponds to 2 seconds of elapsed time.
+A session lasts 30 minutes = 900 frames = 1800 seconds
+After each session, there is a gap of 5.5 hours, during which no data is recorded.
 
-2.  Session Structure:
-    A session lasts 6 hours = 6 * 3600 = 21'600 sec
-    After each session, there is a gap of 5 hours 30 minutes, during which no data is recorded.
+The Frame column resets to 1 after 10'800 frames.
+This means Frame alone does not provide a continuous timeline for the worm’s behavior.
 
-3.  Frame Resets:
-    The Frame column resets to 1 after each session of 10'800 frames.
-    This means Frame alone does not provide a continuous timeline for the worm’s behavior.
-
-4.  Session Offset:
-    To account for the time elapsed from previous sessions, we add a 21600 seconds offset for each completed session.
-
-5.  Updated Absolute Time Formula
-    Absolute Time (s) = (Session Number - 1) * 21'600 + (Frame - 1) * 2
-    the 1st part adds the total time of all the previous sessions
-    the 2nd part converts the currents session's frame number into seconds, starting from 0 within the session
+So for a session + the gap it's 6 hours. So 900 frames correspond to 30min recording + 5.5 h of gap = 6 hours
+In 10'800 frames we have 12 sessions of 900 frames. So before the frames resets it's 12 * 0.5h + 12 * 5.5h = 72h so 3 days
 
 
 >> Handling NaN values :
