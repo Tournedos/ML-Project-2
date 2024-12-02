@@ -34,22 +34,61 @@ def load_data(file_path, worm_id):
     return worm_data
 
 
-def split_data(X, y, test_size=0.2, random_state=42):
+def split_worms(data_path, test_size=0.2, random_state=42):
     """
-    Split the dataset into training and testing sets.
+    Splits worms into separate training and testing datasets for control and drugged groups,
+    while converting .xlsx files to .csv.
 
     Args:
-        X (pd.DataFrame or np.array): Feature matrix.
-        y (pd.Series or np.array): Target labels.
-        test_size (float): Proportion of the dataset to include in the test split.
-        random_state (int): Seed for reproducibility.
+        data_path (str): Path to the Lifespan folder containing control and companyDrug subfolders.
+        test_size (float): Proportion of worms to include in the test split.
+        random_state (int): Random seed for reproducibility.
 
     Returns:
-        tuple: X_train, X_test, y_train, y_test
+        dict: A dictionary containing train and test splits for control and drugged groups.
     """
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=random_state)
-    print(f"Data split complete: {len(X_train)} training samples, {len(X_test)} testing samples.")
-    return X_train, X_test, y_train, y_test
+    worm_data = {'control': [], 'companyDrug': []}
+
+    # Subfolders for control and companyDrug
+    subfolders = ['control', 'companyDrug']
+
+    for subfolder in subfolders:
+        subfolder_path = os.path.join(data_path, subfolder)
+
+        # Check if the subfolder exists
+        if not os.path.exists(subfolder_path):
+            print(f"Warning: {subfolder_path} does not exist. Skipping...")
+            continue
+
+        # Process all .csv and .xlsx files in the subfolder
+        for filename in os.listdir(subfolder_path):
+            file_path = os.path.join(subfolder_path, filename)
+
+            if filename.endswith(".csv"):
+                worm_data[subfolder].append(file_path)
+
+            elif filename.endswith(".xlsx"):
+                # Convert .xlsx to .csv
+                try:
+                    df = pd.read_excel(file_path)  # Read the .xlsx file
+                    csv_path = file_path.replace(".xlsx", ".csv")  # Change file extension to .csv
+                    df.to_csv(csv_path, index=False)  # Save as .csv
+                    print(f"Converted {file_path} to {csv_path}.")
+                    worm_data[subfolder].append(csv_path)  # Add the .csv path to the dataset
+                except Exception as e:
+                    print(f"Failed to convert {file_path}: {e}")
+
+    # Separate splits for control and drugged groups
+    splits = {}
+    for group, files in worm_data.items():
+        train_files, test_files = train_test_split(files, test_size=test_size, random_state=random_state)
+        splits[group] = {
+            'train': train_files,
+            'test': test_files
+        }
+        print(f"{group}: {len(train_files)} training files, {len(test_files)} testing files.")
+
+    return splits
 
 
 def load_whole_data(data_path, test_size=0.2, random_state=42):
