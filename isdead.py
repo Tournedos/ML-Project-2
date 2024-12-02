@@ -79,7 +79,7 @@ def estimate_dying_time(df, movement_threshold) : #, inactivity_threshold_frames
             # Add detailed explanation
             print("\nDetailed Output:")
             print(f"- The worm most probably died at the Absolute Frame {absolute_frame}.")
-            print(f"- This correspond to the frame {dying_frame} of the {segment_number}'th segment(starts at segment 0).")
+            print(f"- This correspond to the frame {dying_frame} of the {segment_number}'th segment(starts at segment).")
             print(f"- The estimated time of death is {dying_time_hours:.2f} hours since the start of recording.\n")
 
             return dying_frame,absolute_frame,dying_time_hours,segment_number
