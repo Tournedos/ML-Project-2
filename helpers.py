@@ -254,11 +254,11 @@ def plot_changed_pixels(worms, worm_names=None, output_dir=None, show_plot=True)
         if output_dir:
             save_path = os.path.join(output_dir, f"{worm_name}_changed_pixels_vs_time.png")
             plt.savefig(save_path)
-            print(f"Plot saved for {worm_name} at {save_path}")
+            #print(f"Plot saved for {worm_name} at {save_path}")
 
         # Show plot if required
-        if show_plot:
-            plt.show()
+        # if show_plot:
+        #     plt.show()
 
         # Close the plot to avoid overlapping
         plt.close()
