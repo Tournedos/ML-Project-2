@@ -220,9 +220,9 @@ def load_earlylifespan(worms, data_fraction=0.2):
 
 
 
-def plot_changed_pixels(worms, worm_names=None, output_dir=None, show_plot=True):
+def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None, show_plot=True):
     """
-    Plot changed pixels vs. time for individual worms.
+    Plot changed pixels vs. time for individual worms and overwrite existing plots if needed.
 
     Args:
         worms (list): List of DataFrames, each representing one worm.
@@ -253,8 +253,14 @@ def plot_changed_pixels(worms, worm_names=None, output_dir=None, show_plot=True)
         # Save plot if output_dir is specified
         if output_dir:
             save_path = os.path.join(output_dir, f"{worm_name}_changed_pixels_vs_time.png")
+
+            # Overwrite the file if it already exists
+            # if os.path.exists(save_path):
+            #     print(f"Overwriting existing plot: {save_path}")
+            # else:
+            #     print(f"Saving new plot: {save_path}")
+
             plt.savefig(save_path)
-            #print(f"Plot saved for {worm_name} at {save_path}")
 
         # Show plot if required
         # if show_plot:
