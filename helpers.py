@@ -217,3 +217,48 @@ def load_earlylifespan(worms, data_fraction=0.2):
 
     print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
     return truncated_worms
+
+
+
+def plot_changed_pixels(worms, worm_names=None, output_dir=None, show_plot=True):
+    """
+    Plot changed pixels vs. time for individual worms.
+
+    Args:
+        worms (list): List of DataFrames, each representing one worm.
+        worm_names (list, optional): List of worm names for labeling the plots. Defaults to None.
+        output_dir (str, optional): Directory to save the plots. If None, plots are not saved.
+        show_plot (bool): Whether to display the plots interactively. Defaults to True.
+
+    Returns:
+        None
+    """
+    if worm_names is None:
+        worm_names = [f"Worm {i+1}" for i in range(len(worms))]
+
+    for i, (worm, worm_name) in enumerate(zip(worms, worm_names)):
+        # Ensure "Frame" and "Changed Pixels" columns exist
+        if 'Frame' not in worm.columns or 'Changed Pixels' not in worm.columns:
+            print(f"Skipping {worm_name} as required columns are missing.")
+            continue
+
+        # Plot Changed Pixels vs. Frame
+        plt.figure(figsize=(10, 6))
+        plt.plot(worm['Frame'], worm['Changed Pixels'], label="Changed Pixels", color='blue', alpha=0.7)
+        plt.xlabel("Frame (Time)", fontsize=12)
+        plt.ylabel("Changed Pixels", fontsize=12)
+        plt.title(f"Changed Pixels vs. Time for {worm_name}", fontsize=14)
+        plt.legend()
+
+        # Save plot if output_dir is specified
+        if output_dir:
+            save_path = os.path.join(output_dir, f"{worm_name}_changed_pixels_vs_time.png")
+            plt.savefig(save_path)
+            print(f"Plot saved for {worm_name} at {save_path}")
+
+        # Show plot if required
+        if show_plot:
+            plt.show()
+
+        # Close the plot to avoid overlapping
+        plt.close()
