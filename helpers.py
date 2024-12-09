@@ -13,27 +13,6 @@ def find_repo_root():
     raise Exception("Radice della repository non trovata")
 
 
-def load_one_data(file_path, worm_id):
-    """
-    Load worm data from one CSV file and validate the file path.
-
-    Args:
-        file_path (str): Path to the worm data CSV file.
-        worm_id (str): Identifier for the worm (e.g., "Control Worm 11").
-
-    Returns:
-        pd.DataFrame: Loaded worm data if the path is valid, None otherwise.
-    """
-    if not os.path.exists(file_path):
-        print(f"{worm_id}: File not found. Check the path: {file_path}")
-        return None
-
-    print(f"{worm_id}: File path is valid. Loading data...")
-    worm_data = pd.read_csv(file_path)
-    print(f"{worm_id}: Data loaded successfully.")
-    return worm_data
-
-
 # def split_worms(data_path, test_size=0.2, random_state=42):
 #     """
 #     Splits worms into separate training and testing datasets for control and drugged groups,
@@ -91,33 +70,33 @@ def load_one_data(file_path, worm_id):
 #     return splits
 
 
-def load_file_data(category_path):
-    """
-    Load data for a specific category (control or companyDrug).
+# def load_file_data(category_path):
+#     """
+#     Load data for a specific category (control or companyDrug).
 
-    Args:
-        category_path (str): Path to the folder containing worm CSV files.
+#     Args:
+#         category_path (str): Path to the folder containing worm CSV files.
 
-    Returns:
-        list: A list of DataFrames, each corresponding to one worm.
-    """
-    # Initialize an empty list to hold worm DataFrames
-    worms = []
+#     Returns:
+#         list: A list of DataFrames, each corresponding to one worm.
+#     """
+#     # Initialize an empty list to hold worm DataFrames
+#     worms = []
 
-    # Check if the path exists
-    if not os.path.exists(category_path):
-        raise FileNotFoundError(f"Path does not exist: {category_path}")
+#     # Check if the path exists
+#     if not os.path.exists(category_path):
+#         raise FileNotFoundError(f"Path does not exist: {category_path}")
 
-    # Loop through all CSV files in the directory
-    for filename in os.listdir(category_path):
-        if filename.endswith(".csv"):  # Only process CSV files
-            file_path = os.path.join(category_path, filename)
-            print(f"Loading file: {file_path}")
-            df = pd.read_csv(file_path)
-            worms.append(df)
+#     # Loop through all CSV files in the directory
+#     for filename in os.listdir(category_path):
+#         if filename.endswith(".csv"):  # Only process CSV files
+#             file_path = os.path.join(category_path, filename)
+#             print(f"Loading file: {file_path}")
+#             df = pd.read_csv(file_path)
+#             worms.append(df)
 
-    print(f"Loaded {len(worms)} worms from {category_path}")
-    return worms
+#     print(f"Loaded {len(worms)} worms from {category_path}")
+#     return worms
 
 
 def plot_trajectory(worm_data, worm_id, output_file,show_plot=True,save_plot=False):
@@ -151,33 +130,6 @@ def plot_trajectory(worm_data, worm_id, output_file,show_plot=True,save_plot=Fal
     plt.close()
 
 
-# def adjust_time(df):
-#     """
-#     Adjust the 'Frame' column to calculate the absolute time in seconds,
-#     accounting for 6-hour sessions with 10800 frames per session.
-
-#     Args:
-#         df (pd.DataFrame): Worm data with 'Frame' column.
-
-#     Returns:
-#         pd.DataFrame: DataFrame with an added 'Absolute Time' column.
-#     """
-#     session_counter = 0
-#     absolute_times = []
-
-#     for i, frame in enumerate(df['Frame']):
-#         # Detect frame reset
-#         if i > 0 and frame < df['Frame'].iloc[i - 1]:
-#             session_counter += 1  # Increment session counter
-
-#         # Calculate absolute time
-#         absolute_time = session_counter * 21600 + (frame - 1) * 2
-#         absolute_times.append(absolute_time)
-
-#     df['Absolute Time (s)'] = absolute_times
-#     return df
-
-
 
 def split_data(worms, test_size=0.2, random_state=42):
     """
@@ -194,29 +146,6 @@ def split_data(worms, test_size=0.2, random_state=42):
     train_worms, test_worms = train_test_split(worms, test_size=test_size, random_state=random_state)
     print(f"Data split complete: {len(train_worms)} training worms, {len(test_worms)} testing worms.")
     return train_worms, test_worms
-
-
-def load_earlylifespan(worms, data_fraction=0.2):
-    """
-    Load only the early lifespan data for each worm.
-
-    Args:
-        worms (list): List of DataFrames, each representing one worm.
-        data_fraction (float): Fraction of the lifespan to retain (e.g., 0.2 for the first 20%).
-
-    Returns:
-        list: A list of truncated DataFrames.
-    """
-    truncated_worms = []
-
-    for worm in worms:
-        # Calculate the number of rows to keep
-        rows_to_keep = int(len(worm) * data_fraction)
-        truncated_worm = worm.head(rows_to_keep)
-        truncated_worms.append(truncated_worm)
-
-    print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
-    return truncated_worms
 
 
 
