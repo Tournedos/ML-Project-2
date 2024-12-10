@@ -5,32 +5,27 @@ from models import *
 from nan_imputation import impute_nan
 
 def load_lifespan(pathin):
-    subfolders = ['control','companyDrug']
-    feat_dict = {}
+    subfolders = ['Lifespan/control','Lifespan/companyDrug', 'Optogenetics/ATR+','Optogenetics/ATR-']
+    feat_dict = {} #save as dictionary because the arrays will have different lenghts
     for subf in subfolders:
         subfp = os.path.join(pathin, subf)
         filenms = os.listdir(subfp)
-        for cont, name in enumerate(filenms): # cont : counter for indeing worms
+        for cont, name in enumerate(filenms): #keep the count to have unique names of worms
             filepath = os.path.join(subfp,name)
             print(filepath)
-            try: # Try reading as a CSV
-                data_raw = pd.read_csv(filepath, sep=',')
+            try:
+                # Try reading as a CSV. this because we noticed that .xlsx files are just copies of csv ones, so try .csv and if not succeed just continue
+                data_raw = pd.read_csv(filepath, sep=',') #put right separator
                 print("File loaded as CSV.")
             except Exception as e:
-                continue
-                #print(f"Failed to load as CSV. Error: {e}")
-                #try:
-                #    # If CSV fails, try reading as Excel
-                #    data_raw = pd.read_excel(filepath)
-                #    print("File loaded as Excel.")
-                #except Exception as e:
-                #    print(f"Failed to load as Excel. Error: {e}")
-                #    raise ValueError("File could not be loaded. Please check the format.")
-            #print(np.array(data_raw.head()).T)
-            sample_name = 'worm_' + str(cont) + '_' + subf # Unique name for each worm 
-            data_n = data_raw.apply(pd.to_numeric) # Attempts to convert all columns in the dataframe to numeric values, ensuring consistency.
-            feat_dict.update({sample_name: np.array(data_n).T}) # Converts the processed dataframe into a NumPy array and transposes it 
+                continue #if file is not .csv ignore it
+            sample_name = 'worm_' + str(cont) + '_' + subf # Unique name for each worm
+            data_n = data_raw.apply(pd.to_numeric) # Attempts to convert all columns in the dataframe to numeric values to use them in calculations.
+            feat_dict.update({sample_name: np.array(data_n).T}) # Converts the processed dataframe into a NumPy array and transposes it, then adds to the dictionary with its key
     return feat_dict
+
+
+
 
 def load_earlylifespan(worms, data_fraction=0.2):
     """
