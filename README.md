@@ -1,20 +1,13 @@
 # ML-Project-2
 
->>1ST MAIL OF THE PROF
-> Each file is in the csv format and shows the x-y center of mass coordinates of one worm.
->
-> Under "Lifespan" you will find "companyDrug" and "control" subfolders, which are from one experiment where a drug turned out not to have an effect on lifespan. However, can you find a difference in behavior in the presence of the drug? Note that the lifespan recordings were made for 6 hours at a time and the csv file thus restarts the frame numbering after each 10800 frames.
->
-> More lifespan data to come.
->
-> Under "Optogenetics" you will find the "ATR+" and "ATR-" subfolders. ATR+ means that the optogenetic systems in the worm neurons were functional. ATR- is the control. Here, the csv files have an additional column "Light_Pulse", which is 1 when the light was turned on. Can you find worm personalities, i.e., persistent differences between worms, including in response to the light stimulus? Here is a related reference
+>>Features
+Each file is in the csv format and shows : 
+1)frames 
+2)-3) the x-y center of mass coordinates of one worm.
 
 
->>>INFORMATIONS FROM SLACK LPBS
-5) The data was recorded at a constant interval of 2 seconds over 30 minutes every 6 hours, so there should be 900 frames per session.
 
-
->>> WHAT I ANALYSED (might be wrong)
+>>> Timing of the sampling
 Key Takeaways from our Data 
 
 Each frame corresponds to 2 seconds of elapsed time.
@@ -30,3 +23,11 @@ In 10'800 frames we have 12 sessions of 900 frames. So before the frames resets 
 
 >> Handling NaN values :
 I don't get it why it must be a bug with the microscope yes, but sometimes the values are just not given. for a few frames. But for a particular frame, if value of x is not given, it's neither for y and the speed thus equals 0 (must be in the skeleton code that if missing position --> set the speed to 0.
+
+>> spliting worms
+
+>> first objective
+"Under "Lifespan" you will find "companyDrug" and "control" subfolders, which are from one experiment where a drug turned out not to have an effect on lifespan. However, can you find a difference in behavior in the presence of the drug? Note that the lifespan recordings were made for 6 hours at a time and the csv file thus restarts the frame numbering after each 10800 frames."
+
+>> second objective : optogenetics
+Under "Optogenetics" you will find the "ATR+" and "ATR-" subfolders. ATR+ means that the optogenetic systems in the worm neurons were functional. ATR- is the control. Here, the csv files have an additional column "Light_Pulse", which is 1 when the light was turned on. Can you find worm personalities, i.e., persistent differences between worms, including in response to the light stimulus? Here is a related reference
