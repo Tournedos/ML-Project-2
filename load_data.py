@@ -3,28 +3,75 @@ import numpy as np
 from helpers import *
 from models import *   
 from nan_imputation import impute_nan
+import random
+
+# def load_lifespan(pathin):
+#     subfolders = ['companyDrug', 'control']
+#     feat_dict = {}
+#     cont = 1  # initialize counter to 1 ( because we don't want it to start from 0)
+
+#     for subf in subfolders:
+#         subfp = os.path.join(pathin, subf)
+#         filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Only load .csv files
+#         for name in filenms :  # cont starting from 0
+#             filepath = os.path.join(subfp, name)
+#             print(f"Loading file: {filepath}")
+#             try:
+#                 # Try reading as a CSV
+#                 data_raw = pd.read_csv(filepath, sep=',')
+#                 print("File loaded as CSV.")
+#             except Exception as e:
+#                 print(f"Failed to load {filepath}: {e}")
+#                 continue
+#             sample_name = 'worm_' + str(cont) + '_' + subf
+#             data_n = data_raw.apply(pd.to_numeric, errors='coerce')  # Ensure numeric values, NaN for incompatible data
+#             feat_dict.update({sample_name: np.array(data_n).T})  # Add to the dictionary
+
+#             cont += 1
+#     return feat_dict
+
 
 def load_lifespan(pathin):
-    subfolders = ['Lifespan/control','Lifespan/companyDrug', 'Optogenetics/ATR+','Optogenetics/ATR-']
-    feat_dict = {} #save as dictionary because the arrays will have different lenghts
-    for subf in subfolders:
+    """
+    Load all worms from both categories (companyDrug and control) into a single structure.
+    Ensures data is in the format (features, frames).
+
+    Args:
+        pathin (str): Root path to the Lifespan directory.
+
+    Returns:
+        dict: A dictionary where keys are worm names (worm_1, worm_2, ...) and values 
+              are NumPy arrays with the worm data and a `Category` column.
+    """
+    subfolders = {'companyDrug': 0, 'control': 1}  # Folder names and their categories
+    worms = {}  # Unified dictionary for all worms
+    worm_id = 1  # Worm numbering starts at 1
+
+    for subf, category in subfolders.items():
         subfp = os.path.join(pathin, subf)
-        filenms = os.listdir(subfp)
-        for cont, name in enumerate(filenms): #keep the count to have unique names of worms
-            filepath = os.path.join(subfp,name)
-            print(filepath)
+        filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Load only CSV files
+
+        for name in filenms:
+            filepath = os.path.join(subfp, name)
+            print(f"Loading file: {filepath}")
             try:
-                # Try reading as a CSV. this because we noticed that .xlsx files are just copies of csv ones, so try .csv and if not succeed just continue
-                data_raw = pd.read_csv(filepath, sep=',') #put right separator
-                print("File loaded as CSV.")
+                # Read the CSV
+                data_raw = pd.read_csv(filepath, sep=',')
+                print(f"File loaded: {filepath}")
             except Exception as e:
-                continue #if file is not .csv ignore it
-            sample_name = 'worm_' + str(cont) + '_' + subf # Unique name for each worm
-            data_n = data_raw.apply(pd.to_numeric) # Attempts to convert all columns in the dataframe to numeric values to use them in calculations.
-            feat_dict.update({sample_name: np.array(data_n).T}) # Converts the processed dataframe into a NumPy array and transposes it, then adds to the dictionary with its key
-    return feat_dict
+                print(f"Failed to load {filepath}: {e}")
+                continue
 
+            # Add the category column
+            data_raw['Category'] = category
 
+            # Convert to NumPy array and transpose to (features, frames)
+            data_array = np.array(data_raw.apply(pd.to_numeric, errors='coerce')).T
+            worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
+            worm_id += 1  # Increment worm ID
+
+    print(f"Loaded {len(worms)} worms with categories as a feature.")
+    return worms
 
 
 def load_earlylifespan(worms, data_fraction=0.2):
@@ -49,6 +96,7 @@ def load_earlylifespan(worms, data_fraction=0.2):
     print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
     return truncated_worms
 
+
 def load_one_data(file_path, worm_id):
     """
     Load worm data from ONE CSV file and validate the file path.
@@ -68,3 +116,40 @@ def load_one_data(file_path, worm_id):
     worm_data = pd.read_csv(file_path)
     print(f"{worm_id}: Data loaded successfully.")
     return worm_data
+
+
+def split_worms(worms, test_size=0.2, random_seed=42):
+    """
+    Split worms into training and testing sets.
+
+    Args:
+        worms (dict): Dictionary of worms, where keys are worm names and values are NumPy arrays.
+        test_size (float): Proportion of the worms to include in the test set (e.g., 0.2 for 20% test worms).
+        random_seed (int): Seed for reproducibility of the random split.
+
+    Returns:
+        tuple: (train_worms, test_worms) where each is a dictionary of worms.
+    """
+    # Ensure reproducibility
+    random.seed(random_seed)
+
+    # Get a list of worm names
+    worm_names = list(worms.keys())
+
+    # Shuffle the worm names
+    random.shuffle(worm_names)
+
+    # Determine the split index
+    split_index = int(len(worm_names) * (1 - test_size))
+
+    # Split the worm names into training and testing sets
+    train_names = worm_names[:split_index]
+    test_names = worm_names[split_index:]
+
+    # Create dictionaries for training and testing worms
+    train_worms = {name: worms[name] for name in train_names}
+    test_worms = {name: worms[name] for name in test_names}
+
+    print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
+
+    return train_worms, test_worms

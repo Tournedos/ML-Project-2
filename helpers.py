@@ -13,92 +13,6 @@ def find_repo_root():
     raise Exception("Radice della repository non trovata")
 
 
-# def split_worms(data_path, test_size=0.2, random_state=42):
-#     """
-#     Splits worms into separate training and testing datasets for control and drugged groups,
-#     while converting .xlsx files to .csv.
-
-#     Args:
-#         data_path (str): Path to the Lifespan folder containing control and companyDrug subfolders.
-#         test_size (float): Proportion of worms to include in the test split.
-#         random_state (int): Random seed for reproducibility.
-
-#     Returns:
-#         dict: A dictionary containing train and test splits for control and drugged groups.
-#     """
-#     worm_data = {'control': [], 'companyDrug': []}
-
-#     # Subfolders for control and companyDrug
-#     subfolders = ['control', 'companyDrug']
-
-#     for subfolder in subfolders:
-#         subfolder_path = os.path.join(data_path, subfolder)
-
-#         # Check if the subfolder exists
-#         if not os.path.exists(subfolder_path):
-#             print(f"Warning: {subfolder_path} does not exist. Skipping...")
-#             continue
-
-#         # Process all .csv and .xlsx files in the subfolder
-#         for filename in os.listdir(subfolder_path):
-#             file_path = os.path.join(subfolder_path, filename)
-
-#             if filename.endswith(".csv"):
-#                 worm_data[subfolder].append(file_path)
-
-#             elif filename.endswith(".xlsx"):
-#                 # Convert .xlsx to .csv
-#                 try:
-#                     df = pd.read_excel(file_path)  # Read the .xlsx file
-#                     csv_path = file_path.replace(".xlsx", ".csv")  # Change file extension to .csv
-#                     df.to_csv(csv_path, index=False)  # Save as .csv
-#                     print(f"Converted {file_path} to {csv_path}.")
-#                     worm_data[subfolder].append(csv_path)  # Add the .csv path to the dataset
-#                 except Exception as e:
-#                     print(f"Failed to convert {file_path}: {e}")
-
-#     # Separate splits for control and drugged groups
-#     splits = {}
-#     for group, files in worm_data.items():
-#         train_files, test_files = train_test_split(files, test_size=test_size, random_state=random_state)
-#         splits[group] = {
-#             'train': train_files,
-#             'test': test_files
-#         }
-#         print(f"{group}: {len(train_files)} training files, {len(test_files)} testing files.")
-
-#     return splits
-
-
-# def load_file_data(category_path):
-#     """
-#     Load data for a specific category (control or companyDrug).
-
-#     Args:
-#         category_path (str): Path to the folder containing worm CSV files.
-
-#     Returns:
-#         list: A list of DataFrames, each corresponding to one worm.
-#     """
-#     # Initialize an empty list to hold worm DataFrames
-#     worms = []
-
-#     # Check if the path exists
-#     if not os.path.exists(category_path):
-#         raise FileNotFoundError(f"Path does not exist: {category_path}")
-
-#     # Loop through all CSV files in the directory
-#     for filename in os.listdir(category_path):
-#         if filename.endswith(".csv"):  # Only process CSV files
-#             file_path = os.path.join(category_path, filename)
-#             print(f"Loading file: {file_path}")
-#             df = pd.read_csv(file_path)
-#             worms.append(df)
-
-#     print(f"Loaded {len(worms)} worms from {category_path}")
-#     return worms
-
-
 def plot_trajectory(worm_data, worm_id, output_file,show_plot=True,save_plot=False):
     """
     Plot the trajectory of the worm and save the plot to a file.
@@ -197,3 +111,17 @@ def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None, show_pl
 
         # Close the plot to avoid overlapping
         plt.close()
+
+def print_fdict_summary(fdict):
+    """
+    Print a summary of the files loaded into fdict.
+
+    Args:
+        fdict (dict): Dictionary where keys are worm names and values are numpy arrays.
+    """
+    print("\nSummary of Loaded Worm Data:")
+    print("=" * 40)
+    for worm_name, data_array in fdict.items():
+        print(f"Worm: {worm_name}")
+        print(f"  Shape: {data_array.shape}")
+        print("-" * 40)

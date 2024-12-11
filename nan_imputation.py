@@ -40,6 +40,8 @@ def count_successive_missing(array):
     lengths = end_indices - start_indices  # Lengths of NaN sequences
     return list(zip(start_indices, end_indices, lengths))
 
+
+
 def cut_array(array, rows_to_check):
     """
     Filters a NumPy array to retain only columns without NaNs in the specified rows.
