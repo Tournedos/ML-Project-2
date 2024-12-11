@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import os
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
@@ -125,3 +126,32 @@ def print_fdict_summary(fdict):
         print(f"Worm: {worm_name}")
         print(f"  Shape: {data_array.shape}")
         print("-" * 40)
+
+
+def standardize_data(worms, feature_columns):
+    """
+    Standardize the features for each worm.
+
+    Args:
+        worms (dict): Dictionary of worms, where each value is a NumPy array.
+        feature_columns (list): Indices of columns to standardize.
+
+    Returns:
+        dict: A new dictionary with standardized feature columns.
+    """
+    # Calculate mean and std for each feature across all worms
+    all_data = np.concatenate([worm[:, feature_columns] for worm in worms.values()], axis=0)
+    means = all_data.mean(axis=0)
+    stds = all_data.std(axis=0)
+    
+    print(f"Means: {means}")
+    print(f"Stds: {stds}")
+
+    # Standardize each worm
+    standardized_worms = {}
+    for name, worm in worms.items():
+        standardized_worm = worm.copy()
+        standardized_worm[:, feature_columns] = (worm[:, feature_columns] - means) / stds
+        standardized_worms[name] = standardized_worm
+
+    return standardized_worms

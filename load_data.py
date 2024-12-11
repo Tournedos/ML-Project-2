@@ -58,6 +58,7 @@ def load_lifespan(pathin):
                 # Read the CSV
                 data_raw = pd.read_csv(filepath, sep=',')
                 print(f"File loaded: {filepath}")
+                print(data_raw.head())  # Debug raw data
             except Exception as e:
                 print(f"Failed to load {filepath}: {e}")
                 continue
@@ -66,7 +67,7 @@ def load_lifespan(pathin):
             data_raw['Category'] = category
 
             # Convert to NumPy array and transpose to (features, frames)
-            data_array = np.array(data_raw.apply(pd.to_numeric, errors='coerce')).T
+            data_array = np.array(data_raw.apply(pd.to_numeric)).T
             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 

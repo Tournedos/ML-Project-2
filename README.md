@@ -26,6 +26,10 @@ I don't get it why it must be a bug with the microscope yes, but sometimes the v
 
 >> spliting worms
 
+>>Step 3 : Standardization 
+ Standardization ensures that all features are on the same scale, typically with a mean of 0 and a standard deviation of 1. This helps models converge faster and makes them less sensitive to the scale of input features. We have speed,X,>,changed pixels (and added categorie (0=companyDrug, 1=control))
+ AVOID doing standardization on categorical or binary columns like Category
+
 >> first objective
 "Under "Lifespan" you will find "companyDrug" and "control" subfolders, which are from one experiment where a drug turned out not to have an effect on lifespan. However, can you find a difference in behavior in the presence of the drug? Note that the lifespan recordings were made for 6 hours at a time and the csv file thus restarts the frame numbering after each 10800 frames."
 
