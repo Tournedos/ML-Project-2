@@ -64,7 +64,7 @@ def split_data(worms, test_size=0.2, random_state=42):
 
 
 
-def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None, show_plot=True):
+def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None):
     """
     Plot changed pixels vs. time for individual worms and overwrite existing plots if needed.
 

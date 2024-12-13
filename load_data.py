@@ -154,3 +154,51 @@ def split_worms(worms, test_size=0.2, random_seed=42):
     print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
 
     return train_worms, test_worms
+
+
+
+def load_optogenetics_data(data_dir):
+    """
+    Load optogenetics data for ATR- and ATR+ worms.
+
+    Args:
+        data_dir (str): Path to the Optogenetics directory containing ATR- and ATR+ folders.
+
+    Returns:
+        dict: A dictionary with two keys: 'ATR-' and 'ATR+'.
+              Each key maps to a list of pandas DataFrames, where each DataFrame contains data for one worm.
+    """
+    # Define subfolders for ATR- (control) and ATR+ (drugged)
+    subfolders = {'ATR-': [], 'ATR+': []}
+
+    # Iterate over subfolders
+    for group in subfolders.keys():
+        group_path = os.path.join(data_dir, group)
+
+        # Check if the subfolder exists
+        if not os.path.exists(group_path):
+            print(f"Warning: {group_path} does not exist. Skipping...")
+            continue
+
+        # Load each CSV file in the subfolder
+        for file in os.listdir(group_path):
+            if file.endswith(".csv"):
+                file_path = os.path.join(group_path, file)
+
+                try:
+                    # Load CSV into a DataFrame
+                    data = pd.read_csv(file_path)
+
+                    # Validate required columns
+                    required_columns = ['Frame', 'Speed', 'X', 'Y', 'Changed pixels', 'Light_Pulse']
+                    if not all(col in data.columns for col in required_columns):
+                        print(f"Skipping {file} as it lacks required columns.")
+                        continue
+
+                    # Append the loaded DataFrame to the respective group
+                    subfolders[group].append(data)
+
+                except Exception as e:
+                    print(f"Error loading {file}: {e}")
+
+    return subfolders

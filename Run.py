@@ -1,4 +1,5 @@
-from helpers import plot_trajectory, load_data, load_whole_data
+import helpers
+import personality as prs
 import matplotlib.pyplot as plt
 import os
 import numpy as np
@@ -27,16 +28,38 @@ w, loss = mean_squared_error_gd(y_train, X_train, initial_w, max_iters, gamma)
 
 # Step 4: Print the results
 
+#----------------------------------------------------------------------------------------------
 # Personality
-import pandas as pd
-from personality import calculate_speed_stats
+# Load data Optogenetics
 
-# Example: Load your data
-repor_root = find_repo_root()
-control_path = os.path.join(repor_root, 'Data/Lifespan/control')
-control_worms = load_file_data(control_path)  # Assuming this loads a list of DataFrames
+# Step 1: Prepare the feature matrix
+feature_matrix = prs.create_feature_matrix(combined_worms, percentile=50).drop(columns=['worm_name'])
 
-# Process each worm's data
-for i, worm_data in enumerate(control_worms):
-    speed_stats = calculate_speed_stats(worm_data)
+# Step 2: Perform hierarchical clustering and visualize the dendrogram
+prs.perform_hierarchical_clustering(feature_matrix, method='ward', output_file='dendrogram.png')
+
+# Step 3: From the dendrogram, determine the number of clusters (e.g., k = 4)
+num_clusters = 4  # Example: You decide the number of clusters from the dendrogram
+
+# Step 4: Perform K-Means clustering
+cluster_labels = prs.perform_kmeans_clustering(feature_matrix, num_clusters=num_clusters)
+
+# Step 5: Add cluster labels to the feature matrix
+feature_matrix['Cluster'] = cluster_labels
+
+# Step 6: Analyze or visualize clusters
+print(feature_matrix.head())
+
+# Example: Visualize clusters in 2D space using PCA
+from sklearn.decomposition import PCA
+import seaborn as sns
+
+pca = PCA(n_components=2)
+reduced_features = pca.fit_transform(feature_matrix.drop(columns=['Cluster']))
+feature_matrix['PCA1'], feature_matrix['PCA2'] = reduced_features[:, 0], reduced_features[:, 1]
+
+plt.figure(figsize=(10, 6))
+sns.scatterplot(x='PCA1', y='PCA2', hue='Cluster', data=feature_matrix, palette='viridis', s=50)
+plt.title("Cluster Visualization (PCA Reduced)")
+plt.show()
 
