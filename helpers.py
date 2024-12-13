@@ -4,14 +4,15 @@ import os
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
-
 def find_repo_root():
-    percorso_corrente = os.path.dirname(os.path.abspath(__file__))
-    while percorso_corrente != os.path.dirname(percorso_corrente):  # As long as we dont reach the right root
-        if os.path.exists(os.path.join(percorso_corrente, '.git')):
-            return percorso_corrente
-        percorso_corrente = os.path.dirname(percorso_corrente)
-    raise Exception("Radice della repository non trovata")
+    current_dir = os.getcwd()
+    while current_dir != os.path.dirname(current_dir):  # Stop when reaching the filesystem root
+        if '.git' in os.listdir(current_dir):
+            return current_dir
+        current_dir = os.path.dirname(current_dir)
+
+    raise FileNotFoundError("No .git directory found. Are you inside a Git repository?")
+
 
 
 def plot_trajectory(worm_data, worm_id, output_file,show_plot=True,save_plot=False):

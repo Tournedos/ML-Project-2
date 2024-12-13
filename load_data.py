@@ -53,12 +53,12 @@ def load_lifespan(pathin):
 
         for name in filenms:
             filepath = os.path.join(subfp, name)
-            print(f"Loading file: {filepath}")
+            # print(f"Loading file: {filepath}")
             try:
                 # Read the CSV
                 data_raw = pd.read_csv(filepath, sep=',')
-                print(f"File loaded: {filepath}")
-                print(data_raw.head())  # Debug raw data
+                # print(f"File loaded: {filepath}")
+                # print(data_raw.head())  # Debug raw data
             except Exception as e:
                 print(f"Failed to load {filepath}: {e}")
                 continue
@@ -71,7 +71,7 @@ def load_lifespan(pathin):
             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 
-    print(f"Loaded {len(worms)} worms with categories as a feature.")
+    # print(f"Loaded {len(worms)} worms with categories as a feature.")
     return worms
 
 
@@ -97,12 +97,11 @@ def load_optogenetics(pathin):
 
         for name in filenms:
             filepath = os.path.join(subfp, name)
-            print(f"Loading file: {filepath}")
             try:
                 # Read the CSV
                 data_raw = pd.read_csv(filepath, sep=',')
-                print(f"File loaded: {filepath}")
-                print(data_raw.head())  # Debug raw data
+                # print(f"File loaded: {filepath}")
+                # print(data_raw.head())  # Debug raw data
             except Exception as e:
                 print(f"Failed to load {filepath}: {e}")
                 continue
@@ -115,7 +114,7 @@ def load_optogenetics(pathin):
             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 
-    print(f"Loaded {len(worms)} worms with categories as a feature.")
+    # print(f"Loaded {len(worms)} worms with categories as a feature.")
     return worms
 
 
@@ -138,7 +137,7 @@ def load_earlylifespan(worms, data_fraction=0.2):
         truncated_worm = worm_data[:, :cols_to_keep]  # Keep only the first `cols_to_keep` columns
         truncated_worms[worm_name] = truncated_worm
 
-    print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
+    # print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
     return truncated_worms
 
 
@@ -195,6 +194,6 @@ def split_worms(worms, test_size=0.2, random_seed=42):
     train_worms = {name: worms[name] for name in train_names}
     test_worms = {name: worms[name] for name in test_names}
 
-    print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
+    # print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
 
     return train_worms, test_worms

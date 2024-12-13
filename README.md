@@ -35,3 +35,5 @@ I don't get it why it must be a bug with the microscope yes, but sometimes the v
 
 >> second objective : optogenetics
 Under "Optogenetics" you will find the "ATR+" and "ATR-" subfolders. ATR+ means that the optogenetic systems in the worm neurons were functional. ATR- is the control. Here, the csv files have an additional column "Light_Pulse", which is 1 when the light was turned on. Can you find worm personalities, i.e., persistent differences between worms, including in response to the light stimulus? Here is a related reference
+
+Drug = Terbinafine
