@@ -75,6 +75,50 @@ def load_lifespan(pathin):
     return worms
 
 
+def load_optogenetics(pathin):
+    """
+    Load all worms from both categories (companyDrug and control) into a single structure.
+    Ensures data is in the format (features, frames).
+
+    Args:
+        pathin (str): Root path to the Lifespan directory.
+
+    Returns:
+        dict: A dictionary where keys are worm names (worm_1, worm_2, ...) and values 
+              are NumPy arrays with the worm data and a `Category` column.
+    """
+    subfolders = {'ATR-': 0, 'ATR+': 1}  # Folder names and their categories
+    worms = {}  # Unified dictionary for all worms
+    worm_id = 1  # Worm numbering starts at 1
+
+    for subf, category in subfolders.items():
+        subfp = os.path.join(pathin, subf)
+        filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Load only CSV files
+
+        for name in filenms:
+            filepath = os.path.join(subfp, name)
+            print(f"Loading file: {filepath}")
+            try:
+                # Read the CSV
+                data_raw = pd.read_csv(filepath, sep=',')
+                print(f"File loaded: {filepath}")
+                print(data_raw.head())  # Debug raw data
+            except Exception as e:
+                print(f"Failed to load {filepath}: {e}")
+                continue
+
+            # Add the category column
+            data_raw['Category'] = category
+
+            # Convert to NumPy array and transpose to (features, frames)
+            data_array = np.array(data_raw.apply(pd.to_numeric)).T
+            worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
+            worm_id += 1  # Increment worm ID
+
+    print(f"Loaded {len(worms)} worms with categories as a feature.")
+    return worms
+
+
 def load_earlylifespan(worms, data_fraction=0.2):
     """
     Load only the early lifespan data for each worm.
