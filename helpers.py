@@ -128,30 +128,30 @@ def print_fdict_summary(fdict):
         print("-" * 40)
 
 
-def standardize_data(worms, feature_columns):
+
+def standardization(processed_worms, feature_columns):
     """
-    Standardize the features for each worm.
+    Perform per-worm standardization.
 
     Args:
-        worms (dict): Dictionary of worms, where each value is a NumPy array.
-        feature_columns (list): Indices of columns to standardize.
+        processed_worms (dict): Dictionary of worm data (features, frames).
+        feature_columns (list): Indices of the columns to standardize.
 
     Returns:
-        dict: A new dictionary with standardized feature columns.
+        dict: Dictionary of standardized worms.
     """
-    # Calculate mean and std for each feature across all worms
-    all_data = np.concatenate([worm[:, feature_columns] for worm in worms.values()], axis=0)
-    means = all_data.mean(axis=0)
-    stds = all_data.std(axis=0)
-    
-    print(f"Means: {means}")
-    print(f"Stds: {stds}")
-
-    # Standardize each worm
     standardized_worms = {}
-    for name, worm in worms.items():
-        standardized_worm = worm.copy()
-        standardized_worm[:, feature_columns] = (worm[:, feature_columns] - means) / stds
-        standardized_worms[name] = standardized_worm
+
+    for worm_name, worm_data in processed_worms.items():
+        standardized_data = worm_data.copy()
+        features = worm_data[feature_columns, :]  # Extract selected features
+
+        # Calculate mean and std for each feature of the worm
+        worm_mean = features.mean(axis=1, keepdims=True)
+        worm_std = features.std(axis=1, keepdims=True)
+
+        # Standardize selected features
+        standardized_data[feature_columns, :] = (features - worm_mean) / worm_std
+        standardized_worms[worm_name] = standardized_data
 
     return standardized_worms
