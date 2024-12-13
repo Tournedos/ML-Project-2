@@ -64,7 +64,7 @@ def split_data(worms, test_size=0.2, random_state=42):
 
 
 
-def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None, show_plot=True):
+def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None):
     """
     Plot changed pixels vs. time for individual worms and overwrite existing plots if needed.
 
@@ -98,20 +98,10 @@ def plot_changed_pixels_vs_time(worms, worm_names=None, output_dir=None, show_pl
         if output_dir:
             save_path = os.path.join(output_dir, f"{worm_name}_changed_pixels_vs_time.png")
 
-            # Overwrite the file if it already exists
-            # if os.path.exists(save_path):
-            #     print(f"Overwriting existing plot: {save_path}")
-            # else:
-            #     print(f"Saving new plot: {save_path}")
-
             plt.savefig(save_path)
 
-        # Show plot if required
-        # if show_plot:
-        #     plt.show()
-
-        # Close the plot to avoid overlapping
         plt.close()
+
 
 def print_fdict_summary(fdict):
     """
