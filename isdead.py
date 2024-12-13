@@ -68,7 +68,7 @@ def estimate_dying_time(df, movement_threshold) : #, inactivity_threshold_frames
         if df_temp.loc[i, 'Inactivity'] == 0:  # Last active frame
             dying_index = i + 1  # Start of inactivity
             if dying_index >= len(df_temp):  # Edge case: no inactivity
-                return None, None, None
+                return None, None, None, None
 
             dying_frame = df_temp.loc[dying_index, 'Frame']
             absolute_frame = df_temp.loc[dying_index, 'Absolute_Frame']
@@ -86,7 +86,7 @@ def estimate_dying_time(df, movement_threshold) : #, inactivity_threshold_frames
 
     # No activity detected at all
     print("No activity detected; worm inactive throughout.")
-    return None, None, None
+    return None, None, None, None
 
 
 

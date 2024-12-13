@@ -32,6 +32,7 @@ import random
 
 
 def load_lifespan(pathin):
+<<<<<<< Updated upstream
     """
     Load all worms from both categories (companyDrug and control) into a single structure.
     Ensures data is in the format (features, frames).
@@ -48,6 +49,11 @@ def load_lifespan(pathin):
     worm_id = 1  # Worm numbering starts at 1
 
     for subf, category in subfolders.items():
+=======
+    subfolders = ['Lifespan/control','Lifespan/companyDrug', 'Lifespan/Terbinafin', 'Lifespan/controlTerbinafin', 'Optogenetics/ATR+','Optogenetics/ATR-']
+    feat_dict = {} #save as dictionary because the arrays will have different lenghts
+    for subf in subfolders:
+>>>>>>> Stashed changes
         subfp = os.path.join(pathin, subf)
         filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Load only CSV files
 
