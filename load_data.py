@@ -80,19 +80,19 @@ def load_earlylifespan(worms, data_fraction=0.2):
     Load only the early lifespan data for each worm.
 
     Args:
-        worms (list): List of DataFrames, each representing one worm.
+        worms (dict): Dictionary where keys are worm names and values are NumPy arrays.
         data_fraction (float): Fraction of the lifespan to retain (e.g., 0.2 for the first 20%).
 
     Returns:
-        list: A list of truncated DataFrames.
+        dict: A dictionary of truncated worms with the same structure as the input.
     """
-    truncated_worms = []
+    truncated_worms = {}
 
-    for worm in worms:
-        # Calculate the number of rows to keep
-        rows_to_keep = int(len(worm) * data_fraction)
-        truncated_worm = worm.head(rows_to_keep)
-        truncated_worms.append(truncated_worm)
+    for worm_name, worm_data in worms.items():
+        # Calculate the number of columns to keep (frames)
+        cols_to_keep = int(worm_data.shape[1] * data_fraction)
+        truncated_worm = worm_data[:, :cols_to_keep]  # Keep only the first `cols_to_keep` columns
+        truncated_worms[worm_name] = truncated_worm
 
     print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
     return truncated_worms
