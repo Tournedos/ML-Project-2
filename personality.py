@@ -84,7 +84,7 @@ def calculate_distance_and_area(data): # total distance parcoured by 1 worm, and
 
 
 
-def calculate_worm_statistics(worms, percentile=50):
+def calculate_worm_statistics(worms, percentile=50): # features
     """
     Calculate comprehensive statistics (speed, movement frequency, distance, area) for multiple worms.
 
@@ -186,22 +186,23 @@ def perform_hierarchical_clustering(feature_matrix, method='ward', output_file=N
 
 
 
-def perform_kmeans_clustering(feature_matrix, num_clusters): # K-Means clustering
+def perform_kmeans_clustering(feature_matrix, num_clusters, personality_map): # K-Means clustering
     """
-    Perform K-Means clustering on the feature matrix.
+    Perform K-Means clustering on the feature matrix and map cluster labels to personality types.
 
     Args:
         feature_matrix (pd.DataFrame): Feature matrix for clustering (without labels).
         num_clusters (int): Number of clusters (k).
+        personality_map (dict): Mapping of cluster IDs to personality types.
 
     Returns:
-        pd.Series: Cluster labels for each data point in the feature matrix.
+        pd.DataFrame: Feature matrix with added 'Cluster' and 'Personality' columns.
     """
     # Perform K-Means clustering
     kmeans = KMeans(n_clusters=num_clusters, random_state=42)
-    cluster_labels = kmeans.fit_predict(feature_matrix)
+    feature_matrix['Cluster'] = kmeans.fit_predict(feature_matrix)
 
-    # Return cluster labels
-    return pd.Series(cluster_labels, name='Cluster')
+    # Map clusters to personality types
+    feature_matrix['Personality'] = feature_matrix['Cluster'].map(personality_map)
 
-
+    return feature_matrix

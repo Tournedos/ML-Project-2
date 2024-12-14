@@ -133,12 +133,12 @@ def load_optogenetics(pathin):
 
         for name in filenms:
             filepath = os.path.join(subfp, name)
-            print(f"Loading file: {filepath}")
+            #print(f"Loading file: {filepath}")
             try:
                 # Read the CSV
                 data_raw = pd.read_csv(filepath, sep=',')
-                print(f"File loaded: {filepath}")
-                print(data_raw.head())  # Debug raw data
+                # print(f"File loaded: {filepath}")
+                # print(data_raw.head())  # Debug raw data
             except Exception as e:
                 print(f"Failed to load {filepath}: {e}")
                 continue
@@ -151,7 +151,7 @@ def load_optogenetics(pathin):
             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 
-    print(f"Loaded {len(worms)} worms with categories as a feature.")
+    #print(f"Loaded {len(worms)} worms with categories as a feature.")
     return worms
 
 
