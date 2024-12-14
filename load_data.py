@@ -31,9 +31,45 @@ import random
 #     return feat_dict
 
 
+# def load_lifespan(pathin):
+#     subfolders = ['Lifespan/control','Lifespan/companyDrug', 'Lifespan/Terbinafin', 'Lifespan/controlTerbinafin', 'Optogenetics/ATR+','Optogenetics/ATR-']
+#     worms = {} #save as dictionary because the arrays will have different lenghts
+#     worm_id = 1 # initialize counter to 1 ( because we don't want it to start from 0)
+
+#     for subf, category in subfolders.items():
+#         subfp = os.path.join(pathin, subf)
+#         if not os.path.exists(subfp):
+#             print(f"Warning: Subfolder does not exist: {subfp}")
+#             continue
+
+#         filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Load only CSV files
+
+#         for name in filenms:
+#             filepath = os.path.join(subfp, name)
+#             print(f"Loading file: {filepath}")
+#             try:
+#                 # Read the CSV
+#                 data_raw = pd.read_csv(filepath, sep=',')
+#                 print(f"File loaded: {filepath}")
+#                 print(data_raw.head())  # Debug raw data
+#             except Exception as e:
+#                 print(f"Failed to load {filepath}: {e}")
+#                 continue
+
+#             # Add the category column
+#             data_raw['Category'] = category
+
+#             # Convert to NumPy array and transpose to (features, frames)
+#             data_array = np.array(data_raw.apply(pd.to_numeric)).T
+#             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
+#             worm_id += 1  # Increment worm ID
+
+#     print(f"Loaded {len(worms)} worms with categories as a feature.")
+#     return worms
+
 def load_lifespan(pathin):
     """
-    Load all worms from both categories (companyDrug and control) into a single structure.
+    Load all worms from multiple categories into a unified structure.
     Ensures data is in the format (features, frames).
 
     Args:
@@ -43,27 +79,28 @@ def load_lifespan(pathin):
         dict: A dictionary where keys are worm names (worm_1, worm_2, ...) and values 
               are NumPy arrays with the worm data and a `Category` column.
     """
-    subfolders = {'companyDrug': 0, 'control': 1}  # Folder names and their categories
+    subfolders = {'control': 0,'companyDrug': 1,'controlTerbinafin': 2,'Terbinafin': 3}
     worms = {}  # Unified dictionary for all worms
     worm_id = 1  # Worm numbering starts at 1
 
     for subf, category in subfolders.items():
         subfp = os.path.join(pathin, subf)
+        if not os.path.exists(subfp):  # Skip if the subfolder doesn't exist
+            print(f"Warning: Subfolder does not exist: {subfp}")
+            continue
+    
         filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Load only CSV files
 
         for name in filenms:
             filepath = os.path.join(subfp, name)
-            # print(f"Loading file: {filepath}")
             try:
                 # Read the CSV
                 data_raw = pd.read_csv(filepath, sep=',')
-                # print(f"File loaded: {filepath}")
-                # print(data_raw.head())  # Debug raw data
             except Exception as e:
                 print(f"Failed to load {filepath}: {e}")
                 continue
 
-            # Add the category column
+            # Add the numerical category as a column
             data_raw['Category'] = category
 
             # Convert to NumPy array and transpose to (features, frames)
@@ -71,7 +108,6 @@ def load_lifespan(pathin):
             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 
-    # print(f"Loaded {len(worms)} worms with categories as a feature.")
     return worms
 
 
@@ -97,11 +133,12 @@ def load_optogenetics(pathin):
 
         for name in filenms:
             filepath = os.path.join(subfp, name)
+            print(f"Loading file: {filepath}")
             try:
                 # Read the CSV
                 data_raw = pd.read_csv(filepath, sep=',')
-                # print(f"File loaded: {filepath}")
-                # print(data_raw.head())  # Debug raw data
+                print(f"File loaded: {filepath}")
+                print(data_raw.head())  # Debug raw data
             except Exception as e:
                 print(f"Failed to load {filepath}: {e}")
                 continue
@@ -114,7 +151,7 @@ def load_optogenetics(pathin):
             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 
-    # print(f"Loaded {len(worms)} worms with categories as a feature.")
+    print(f"Loaded {len(worms)} worms with categories as a feature.")
     return worms
 
 
@@ -137,7 +174,7 @@ def load_earlylifespan(worms, data_fraction=0.2):
         truncated_worm = worm_data[:, :cols_to_keep]  # Keep only the first `cols_to_keep` columns
         truncated_worms[worm_name] = truncated_worm
 
-    # print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
+    print(f"Truncated data to {data_fraction * 100}% of the lifespan for {len(truncated_worms)} worms.")
     return truncated_worms
 
 
@@ -194,6 +231,6 @@ def split_worms(worms, test_size=0.2, random_seed=42):
     train_worms = {name: worms[name] for name in train_names}
     test_worms = {name: worms[name] for name in test_names}
 
-    # print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
+    print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
 
     return train_worms, test_worms
