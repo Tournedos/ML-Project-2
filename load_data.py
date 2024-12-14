@@ -234,3 +234,27 @@ def split_worms(worms, test_size=0.2, random_seed=42):
     print(f"Split {len(worms)} worms into {len(train_worms)} training and {len(test_worms)} testing worms.")
 
     return train_worms, test_worms
+
+
+def truncate_early_lifespan(worms, data_fraction=0.4):
+    """
+    Truncate the early lifespan of each worm in the dataset.
+    
+    Args:
+        worms (dict): Dictionary where keys are worm names and values are NumPy arrays.
+        data_fraction (float): Fraction of the lifespan to retain (e.g., 0.4 for 40%).
+        
+    Returns:
+        dict: A dictionary with worms truncated to the specified fraction of their lifespan.
+    """
+    truncated_worms = {}
+    
+    for worm_name, worm_data in worms.items():
+        # Calculate the number of frames to keep
+        num_frames_to_keep = int(worm_data.shape[1] * data_fraction)
+        
+        # Keep only the first `num_frames_to_keep` frames
+        truncated_worms[worm_name] = worm_data[:, :num_frames_to_keep]
+    
+    print(f"Truncated all worms to {data_fraction * 100}% of their lifespan.")
+    return truncated_worms
