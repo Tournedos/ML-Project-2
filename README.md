@@ -37,3 +37,10 @@ I don't get it why it must be a bug with the microscope yes, but sometimes the v
 Under "Optogenetics" you will find the "ATR+" and "ATR-" subfolders. ATR+ means that the optogenetic systems in the worm neurons were functional. ATR- is the control. Here, the csv files have an additional column "Light_Pulse", which is 1 when the light was turned on. Can you find worm personalities, i.e., persistent differences between worms, including in response to the light stimulus? Here is a related reference
 
 Drug = Terbinafine
+
+
+# Preprocessing for Optogenetics
+ATR+/- only covers worms from larvae to young adults, Not till death
+Everything else is fair to pool, except the second drug (whose name I forget), we’d like to see whether you can distinguish it from control
+
+--> so we can take ou the estimation of the worm's death (since still alive in the end)
