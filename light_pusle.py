@@ -124,11 +124,9 @@ def plot_behavior_changes(behavior_comparisons, feature, worm_type):
 
     # Save the plot
     repo_root = hp.find_repo_root()
-    output_dir = os.path.join(repo_root, 'Data', 'Plots', 'light_pulses')
+    output_dir = os.path.join(repo_root, 'Data', 'Plots', 'light_pulses', 'behavior_changes')
     os.makedirs(output_dir, exist_ok=True)
     output_path = os.path.join(output_dir, f"{feature}_comparison_{worm_type}.png")
     plt.savefig(output_path)
 
     plt.close()
-    # Show the plot
-    # plt.show()
