@@ -64,14 +64,14 @@ def compare_behavior_before_during(worm_df, light_pulses, window=15):
         # Ensure enough data is available for both before and during windows
         if not before_pulse.empty and not during_pulse.empty:
             comparison = {
-                'Pulse_Start': start_frame,
-                'Pulse_End': end_frame,
-                'Speed_Before': before_pulse['Speed'].mean(),
-                'Speed_During': during_pulse['Speed'].mean(),
-                'Changed Pixels_Before': before_pulse['Changed Pixels'].mean(),
-                'Changed Pixels_During': during_pulse['Changed Pixels'].mean(),
-                'Distance_Before': np.sqrt(np.diff(before_pulse['X']).mean()**2 + np.diff(before_pulse['Y']).mean()**2),
-                'Distance_During': np.sqrt(np.diff(during_pulse['X']).mean()**2 + np.diff(during_pulse['Y']).mean()**2)
+                'Pulse Start': start_frame,
+                'Pulse End': end_frame,
+                'Speed Before': before_pulse['Speed'].mean(),
+                'Speed During': during_pulse['Speed'].mean(),
+                'Changed Pixels Before': before_pulse['Changed Pixels'].mean(),
+                'Changed Pixels During': during_pulse['Changed Pixels'].mean(),
+                'Distance Before': np.sqrt(np.diff(before_pulse['X']).mean()**2 + np.diff(before_pulse['Y']).mean()**2),
+                'Distance During': np.sqrt(np.diff(during_pulse['X']).mean()**2 + np.diff(during_pulse['Y']).mean()**2)
             }
             comparisons.append(comparison)
 
@@ -94,8 +94,6 @@ def plot_behavior_changes(behavior_comparisons, feature, worm_type):
     # Ensure feature column names match the DataFrame
     feature_column_before = f"{feature} Before"
     feature_column_during = f"{feature} During"
-    print('feature_column_before', feature_column_before, '\n')
-    print('feature_column_during', feature_column_during)
 
     # Check if these columns exist in the DataFrame
     if feature_column_before not in behavior_comparisons.columns or feature_column_during not in behavior_comparisons.columns:
@@ -105,7 +103,7 @@ def plot_behavior_changes(behavior_comparisons, feature, worm_type):
     # Prepare data for visualization
     melted_data = pd.melt(
         behavior_comparisons,
-        id_vars=['Pulse_Start', 'Pulse_End'],
+        id_vars=['Pulse Start', 'Pulse End'],
         value_vars=[feature_column_before, feature_column_during],
         var_name='Condition',
         value_name=feature
@@ -131,5 +129,6 @@ def plot_behavior_changes(behavior_comparisons, feature, worm_type):
     output_path = os.path.join(output_dir, f"{feature}_comparison_{worm_type}.png")
     plt.savefig(output_path)
 
+    plt.close()
     # Show the plot
-    plt.show()
+    # plt.show()
