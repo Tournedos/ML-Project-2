@@ -229,8 +229,6 @@ def compute_mean_turning_angle(x, y):
 
 
 def create_aug(x,y,seed=42):
-    #x_opp = np.max(x) - x
-    #y_opp = np.max(y) - y
     np.random.seed(seed)
     noise_x = np.random.normal(0,1,len(x))
     noise_y = np.random.normal(0,1,len(y))
