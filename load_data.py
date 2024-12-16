@@ -236,25 +236,57 @@ def split_worms(worms, test_size=0.2, random_seed=42):
     return train_worms, test_worms
 
 
-def truncate_early_lifespan(worms, data_fraction=0.4):
+def prepare_training_data(worms):
     """
-    Truncate the early lifespan of each worm in the dataset.
-    
+    Prepares the features (X) and targets (y) for training or testing.
+
     Args:
-        worms (dict): Dictionary where keys are worm names and values are NumPy arrays.
-        data_fraction (float): Fraction of the lifespan to retain (e.g., 0.4 for 40%).
-        
+        worms (dict): Dictionary where keys are worm names and values are NumPy arrays of worm data 
+                      with the shape (features, frames).
+
     Returns:
-        dict: A dictionary with worms truncated to the specified fraction of their lifespan.
+        tuple: (X, y) where:
+               - X is a dictionary of features (NumPy arrays with shape (features, frames)).
+               - y is a dictionary of lifespans (total number of frames per worm).
+    """
+    X = {}
+    y = {}
+
+    for worm_name, worm_data in worms.items():
+        # Features: Keep all rows except the first one (Frame)
+        features = worm_data[1:, :]  # Remove the first row (Frame)
+        X[worm_name] = features  # Shape remains (features, frames)
+
+
+        # Target: Lifespan (total number of frames)
+        lifespan = worm_data.shape[1]  # The number of columns represents the lifespan
+        y[worm_name] = lifespan
+
+    return X, y
+
+
+def truncate_lifespan(worms, data_fraction=0.4):
+    """
+    Truncate each worm's data to a fraction of its lifespan.
+
+    Args:
+        worms (dict): Dictionary where keys are worm names and values are NumPy arrays of shape (features, frames).
+        data_fraction (float): Fraction of the lifespan to retain (e.g., 0.4 for the first 40%).
+
+    Returns:
+        dict: A dictionary of worms truncated to the specified fraction of their lifespan.
     """
     truncated_worms = {}
-    
+
     for worm_name, worm_data in worms.items():
-        # Calculate the number of frames to keep
-        num_frames_to_keep = int(worm_data.shape[1] * data_fraction)
-        
-        # Keep only the first `num_frames_to_keep` frames
-        truncated_worms[worm_name] = worm_data[:, :num_frames_to_keep]
-    
-    print(f"Truncated all worms to {data_fraction * 100}% of their lifespan.")
+        original_frames = worm_data.shape[1]  # Total number of frames
+        cols_to_keep = int(original_frames * data_fraction)  # Calculate how many columns to keep
+        truncated_worm = worm_data[:, :cols_to_keep]  # Retain only the first `cols_to_keep` columns
+        truncated_worms[worm_name] = truncated_worm  # Store the truncated data
+
+        print(f"{worm_name}: Original frames = {original_frames}, Truncated frames = {cols_to_keep}")
+
     return truncated_worms
+
+
+
