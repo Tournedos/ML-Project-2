@@ -110,19 +110,6 @@ def compute_acceleration_stats(speed):
     acceleration = np.diff(speed)
     return np.std(acceleration)
 
-def compute_jerk_skewness(speed):
-    """
-    Compute the skewness of jerk (second derivative of speed).
-
-    Parameters:
-        speed (numpy.ndarray): Speed values.
-
-    Returns:
-        float: Skewness of jerk.
-    """
-    jerk = np.diff(np.diff(speed))
-    return np.mean((jerk - np.mean(jerk))**3) / np.std(jerk)**3 if len(jerk) > 0 else 0
-
 # 3. Spatial Features
 def compute_convex_hull_area(x, y):
     """
@@ -241,7 +228,13 @@ def compute_mean_turning_angle(x, y):
     return np.mean(np.abs(np.diff(angles)))
 
 
-
+def create_aug(x,y,seed=42):
+    #x_opp = np.max(x) - x
+    #y_opp = np.max(y) - y
+    np.random.seed(seed)
+    noise_x = np.random.normal(0,1,len(x))
+    noise_y = np.random.normal(0,1,len(y))
+    return x + noise_x, y + noise_y
 
 
 def preprocess_dataset(samples):
@@ -261,6 +254,9 @@ def preprocess_dataset(samples):
         x = sample[:, 0]
         y = sample[:, 1]
         speed = sample[:, 2]  # Assuming speed is precomputed, else use compute_speed(x, y)
+        cspeed = compute_speed(x,y)
+        if (speed != cspeed).any():
+            speed = cspeed
 
         # Summarize X and Y
         x_features = summarize_feature(x)
@@ -268,6 +264,15 @@ def preprocess_dataset(samples):
 
         # Compute direction changes
         direction_change_variance = compute_direction_changes(x, y)
+        entropy_x = compute_entropy(x)
+        entropy_y = compute_entropy(y)
+        entropy_v = compute_entropy(speed)
+        cofvar_x = compute_coefficient_of_variation(x)
+        cofvar_y = compute_coefficient_of_variation(y)
+        cofvar_v = compute_coefficient_of_variation(speed)
+        acc_std = compute_acceleration_stats(speed)
+        h_ar = compute_convex_hull_area(x,y)
+        patheff = compute_path_efficiency(x,y)
         #entrioy....
         #...
 
@@ -281,6 +286,15 @@ def preprocess_dataset(samples):
             **{f'x_{k}': v for k, v in x_features.items()},
             **{f'y_{k}': v for k, v in y_features.items()},
             'direction_change_variance': direction_change_variance,
+            'entropy_x' : entropy_x,
+            'entropy_y' : entropy_y,
+            'entropy_speed' : entropy_v,
+            'ceff_var_x' : cofvar_x,
+            'coeff_var_y' : cofvar_y,
+            'coeff_var_v' : cofvar_v,
+            'acceleration_std' : acc_std,
+            'hull_convex_area' : h_ar,
+            'path_eff' : patheff,
             **{f'speed_{k}': v for k, v in speed_features.items()},
             **{f'speed_temporal_{k}': v for k, v in speed_temporal_features.items()}
         }

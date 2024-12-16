@@ -105,7 +105,7 @@ def load_lifespan(pathin):
 
             # Convert to NumPy array and transpose to (features, frames)
             data_array = np.array(data_raw.apply(pd.to_numeric)).T
-            worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
+            worms[f'worm_{worm_id}_{subf}'] = data_array  # Add worm to the dictionary
             worm_id += 1  # Increment worm ID
 
     return worms
