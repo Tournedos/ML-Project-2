@@ -1,5 +1,7 @@
 import numpy as np
 from helpers_model import gradient_descent
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     """Performs linear regression using gradient descent (GD) to minimize the Mean Squared Error (MSE) loss function.
@@ -29,3 +31,40 @@ def mean_squared_error_gd(y, tx, initial_w, max_iters, gamma):
     # Return the final weights and the final loss
     return w, loss
 
+def aggregate_features(worms, window_size=1000):
+    """
+    Aggregate features by dividing frames into windows and computing statistics per window.
+
+    Args:
+        worms (dict): Dictionary where keys are worm names and values are (frames, features).
+        window_size (int): Number of frames per window.
+
+    Returns:
+        tuple: X (aggregated features), y (lifespans).
+    """
+    X = []
+    y = []
+    
+    for worm_name, worm_data in worms.items():
+        features = worm_data[:, 1:]  # Exclude Frame number (column 0)
+        n_frames = features.shape[0]
+        
+        # Skip worms with fewer frames than the window size
+        if n_frames < window_size:
+            print(f"Skipping {worm_name}: Not enough frames ({n_frames} frames, window size = {window_size}).")
+            continue
+        
+        # Calculate the number of complete windows
+        n_windows = n_frames // window_size
+        trimmed_features = features[:n_windows * window_size]
+        
+        # Reshape into windows and compute stats
+        reshaped = trimmed_features.reshape(n_windows, window_size, -1)  # (windows, frames_per_window, features)
+        stats = np.hstack([reshaped.mean(axis=1), reshaped.std(axis=1), reshaped.min(axis=1), reshaped.max(axis=1)])
+        
+        # Flatten stats for all windows into one vector
+        aggregated = stats.flatten()
+        X.append(aggregated)
+        y.append(worm_data[:, 0].max())  # Lifespan is the max Frame number
+    
+    return np.array(X, dtype=object), np.array(y)
