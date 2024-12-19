@@ -8,15 +8,20 @@ from nan_imputation import cut_array
 
 def remove_nans(fdict):
     """
-    Function to remove Nan values from initial lifespan arrays
+    Removes NaN values from lifespan arrays within a dictionary.
 
-    Input:
+    Args:
+        fdict (dict): Dictionary of the form {name: array}, where `name` is the worm name
+                      and `array` is a lifespan array containing data to process.
 
-    fdict: dictionary like {name:array}, with worm names and lifespan arrays
+    Returns:
+        dict: A new dictionary with the same structure, but with NaN values removed
+              from the specified rows (2 to 4, inclusive in zero-based indexing).
 
-    Output:
-
-    cut_lifespan_dict: dictionary with same structure but arrays without nans
+    Process:
+        - For each entry in the input dictionary, NaN values in rows 2, 3, and 4
+          (inclusive) of the array are removed.
+        - Arrays without NaN values in the specified rows are returned.
     """
     # Rows to check for missing values (2:4 in zero-based indexing)
     rows_to_check = slice(2, 4)  # Rows 2, 3, 4
