@@ -53,10 +53,8 @@ def compare_behavior_before_during(worm_df, light_pulses, window=15):
     comparisons = []
 
     for start_frame, end_frame in light_pulses:
-        # Behavior during the pulse
         during_pulse = worm_df[(worm_df['Frame'] >= start_frame) & (worm_df['Frame'] <= end_frame)]
-
-        # Behavior before the pulse (up to `window` frames)
+        
         before_pulse = worm_df[
             (worm_df['Frame'] >= start_frame - window) & (worm_df['Frame'] < start_frame)
         ]
@@ -91,11 +89,9 @@ def plot_behavior_changes(behavior_comparisons, feature, worm_type):
     Returns:
         None
     """
-    # Ensure feature column names match the DataFrame
     feature_column_before = f"{feature} Before"
     feature_column_during = f"{feature} During"
 
-    # Check if these columns exist in the DataFrame
     if feature_column_before not in behavior_comparisons.columns or feature_column_during not in behavior_comparisons.columns:
         print(f"Columns {feature_column_before} and {feature_column_during} are missing in behavior comparisons.")
         return
