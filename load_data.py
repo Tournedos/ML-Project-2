@@ -5,68 +5,6 @@ from models import *
 from nan_imputation import impute_nan
 import random
 
-# def load_lifespan(pathin):
-#     subfolders = ['companyDrug', 'control']
-#     feat_dict = {}
-#     cont = 1  # initialize counter to 1 ( because we don't want it to start from 0)
-
-#     for subf in subfolders:
-#         subfp = os.path.join(pathin, subf)
-#         filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Only load .csv files
-#         for name in filenms :  # cont starting from 0
-#             filepath = os.path.join(subfp, name)
-#             print(f"Loading file: {filepath}")
-#             try:
-#                 # Try reading as a CSV
-#                 data_raw = pd.read_csv(filepath, sep=',')
-#                 print("File loaded as CSV.")
-#             except Exception as e:
-#                 print(f"Failed to load {filepath}: {e}")
-#                 continue
-#             sample_name = 'worm_' + str(cont) + '_' + subf
-#             data_n = data_raw.apply(pd.to_numeric, errors='coerce')  # Ensure numeric values, NaN for incompatible data
-#             feat_dict.update({sample_name: np.array(data_n).T})  # Add to the dictionary
-
-#             cont += 1
-#     return feat_dict
-
-
-# def load_lifespan(pathin):
-#     subfolders = ['Lifespan/control','Lifespan/companyDrug', 'Lifespan/Terbinafin', 'Lifespan/controlTerbinafin', 'Optogenetics/ATR+','Optogenetics/ATR-']
-#     worms = {} #save as dictionary because the arrays will have different lenghts
-#     worm_id = 1 # initialize counter to 1 ( because we don't want it to start from 0)
-
-#     for subf, category in subfolders.items():
-#         subfp = os.path.join(pathin, subf)
-#         if not os.path.exists(subfp):
-#             print(f"Warning: Subfolder does not exist: {subfp}")
-#             continue
-
-#         filenms = [f for f in os.listdir(subfp) if f.endswith('.csv')]  # Load only CSV files
-
-#         for name in filenms:
-#             filepath = os.path.join(subfp, name)
-#             print(f"Loading file: {filepath}")
-#             try:
-#                 # Read the CSV
-#                 data_raw = pd.read_csv(filepath, sep=',')
-#                 print(f"File loaded: {filepath}")
-#                 print(data_raw.head())  # Debug raw data
-#             except Exception as e:
-#                 print(f"Failed to load {filepath}: {e}")
-#                 continue
-
-#             # Add the category column
-#             data_raw['Category'] = category
-
-#             # Convert to NumPy array and transpose to (features, frames)
-#             data_array = np.array(data_raw.apply(pd.to_numeric)).T
-#             worms[f'worm_{worm_id}'] = data_array  # Add worm to the dictionary
-#             worm_id += 1  # Increment worm ID
-
-#     print(f"Loaded {len(worms)} worms with categories as a feature.")
-#     return worms
-
 def load_lifespan(pathin):
     """
     Load all worms from multiple categories into a unified structure.
