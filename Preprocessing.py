@@ -4,6 +4,8 @@ from isdead import estimate_dying_time
 import pandas as pd
 from nan_imputation import cut_array
 
+
+
 def remove_nans(fdict):
     """
     Function to remove Nan values from initial lifespan arrays
@@ -23,6 +25,8 @@ def remove_nans(fdict):
     cut_lifespan_dict = {name: cut_array(array, rows_to_check) for name, array in fdict.items()}
 
     return cut_lifespan_dict
+
+
 
 def create_classes(cut_lifespan_dict):
     """
@@ -63,6 +67,7 @@ def create_classes(cut_lifespan_dict):
     return lenghts
 
 
+
 def estimate_death_times(cut_lifespan_dict):
     death_times = []
     for name, item in cut_lifespan_dict.items():
@@ -79,6 +84,7 @@ def estimate_death_times(cut_lifespan_dict):
         else:
             death_times.append(arrdf.shape[0])
     return death_times
+
 
 
 def augment_worms(cut_lifespan_dict, y_reg, y_class):
