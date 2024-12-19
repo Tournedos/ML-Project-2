@@ -49,21 +49,52 @@ jupyter notebook run.ipynb
 
 
 4. # Notebook Workflow
-4.1 Setup : 
--   import libraries and helper functions
--   load the worm lifespan data and optogenetics data
-4.2 Data Preprocessing : 
+The notebook run.ipynb is structured to guide you through the complete process of worm lifespan prediction.
+ 
+Part 1 : 1. Lifespan prediction based on early behavior
+1) Setup : 
+-   Import libraries (numpy,pandas...) and custom modules (helpers.py, models.py...)
+-   The root directory and data paths are set up for seamless data loading.
+2) Data loading :
+-    Load lifespan data, make sure of proper loading (only csc files)
+3) Data Preprocessing : 
 -   Cleans data by imputing NaNs
--   Standardizes and prepares features for modeling
-4.3 Feature Engineering:
+-   Remove frames where the worms are detected to be dead.
+-   Standardizes to prepares features for modeling.
+4) Feature Engineering:
 -   Extracts early behavior metrics from the raw data.
 -   Constructs datasets for regression and classification tasks.
-4.4. Model Training and Evaluation:
--   Trains machine learning models to predict lifespan.
+5) Model Training and Evaluation:
+-   Trains machine learning models to predict lifespan, using early behavioral features.
 -   Evaluates model performance using metrics and visualizations.
-4.5. Results Analysis:
--   Visualizes survival curves using Kaplan-Meier estimators.
--   Analyzes the relationship between features and lifespan predictions.
+6) Results Analysis:
+-   Analyze predictions against ground truth using metrics like RMSE and accuracy.
+-   Kaplan-Meier curves for survival analysis.
+-   Error histograms for lifespan prediction models.
+
+
+
+Part 2 : Assessment of personality of worms based on early behavior
+1) Setup :
+-   make any additionnal needed imports
+-   load data, specifically Optogenetics file this time
+2) Preprocessing optogenetics data :
+-   NaN imputation
+3) Feature Engeneering :
+-   Derive personality metrics from early movement patterns such as consistency in movement and preferred activity levels
+4) Clustering Analysis :
+-   Perform clustering to group worms based on similar behavioral traits
+-   Visualize clusters to identify distinct personality types
+5) Behavioral Traits Evaluation :
+-   Quantify differences between clusters using statistical methods
+-   Highligh key behavioral features that differentiate groups
+6) Visualization :
+-   Generate plots to visualize personnality traits and cluster distributions
+7) Insights and interpretation:
+-   Draw connections between personnality traits and lifespan predictions from Part 1.
+-   Provide actionable based on behavioral clustering
+-   Cluster plots showing distinct worm personality types.
+-   Behavioral feature distributions across clusters.
 
 
 5. # Results and Outputs
