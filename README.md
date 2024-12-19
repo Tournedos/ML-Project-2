@@ -46,7 +46,7 @@ jupyter notebook run.ipynb
 •	Preprocessing.py : Handles general preprocessing tasks to clean the data.
 •	preprocessing_features.py : Focuses on feature-specific preprocessing, such as scaling and extraction. Calculates new features based on the basic features that comes with the data
 •	load_data.py : Includes functions like load_lifespan and load_earlylifespan for loading datasets.
-
+•	try.ipynb : Not used in the final notebook, but contains (raw) previous analysis made to arrive to the final results.
 
 4. # Notebook Workflow
 The notebook run.ipynb is structured to guide you through the complete process of worm lifespan prediction.
@@ -102,5 +102,13 @@ Part 2 : Assessment of personality of worms based on early behavior
 	Provides lifespan predictions for worms based on their early behavior.
 •	Visualizations:
 	Includes Kaplan-Meier survival curves and other plots for understanding model performance.
+•	Evaluation:
+	analysis of OLS coefficients.
 •	Performance Metrics:
 	Reports accuracy, RMSE, and survival analysis metrics.
+
+
+
+  6. # Add new data
+
+To run the pipeline with new worms data make sure that the new files are saved in the same format (.csv) and contain the same informations. Then, put the files in one of the 'Data' subfolders and run the notebook. If the new files contain different data (from different experiments or with different drugs) the notebook will run, but to make it semantically meaningful it may be required to modify just parts of 'load_daya.py'.
