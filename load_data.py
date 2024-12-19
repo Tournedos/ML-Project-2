@@ -17,7 +17,7 @@ def load_lifespan(pathin):
         dict: A dictionary where keys are worm names (worm_1, worm_2, ...) and values 
               are NumPy arrays with the worm data and a `Category` column.
     """
-    subfolders = {'control': 0,'companyDrug': 1,'controlTerbinafin': 2}   #'Terbinafin': 3 Removed Terebafin for now
+    subfolders = {'control': 0,'companyDrug': 1,'controld2': 2}   #'Terbinafin': 3 Removed Terebafin for now
     worms = {}  # Unified dictionary for all worms
     worm_id = 1  # Worm numbering starts at 1
 
