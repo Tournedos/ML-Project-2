@@ -74,6 +74,17 @@ def create_classes(cut_lifespan_dict):
 
 
 def estimate_death_times(cut_lifespan_dict):
+    """
+    Estimate the death times for multiple worms based on their lifespan data.
+
+    Args:
+        cut_lifespan_dict (dict): Dictionary with the structure {worm_name: array}, 
+                                  where each array contains behavioral data for a worm.
+
+    Returns:
+        list: A list of absolute frame numbers corresponding to the estimated death times for each worm.
+              If no inactivity is detected for a worm, the total number of frames is used as a fallback.
+    """
     death_times = []
     for name, item in cut_lifespan_dict.items():
         #print(f'worm name: {name}')
